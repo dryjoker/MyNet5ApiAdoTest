@@ -14,7 +14,7 @@ namespace MyNet5ApiAdoTest.Utility
     {
         public static readonly string connectionString = AppConfigurationService.Configuration.GetConnectionString("NewsDb");
 
-        public static int ExecuteNonQuery(string strSQL, Hashtable htParams)
+        public static int ExecuteNonQuery(string strSQL, Hashtable htParams = null)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -27,7 +27,7 @@ namespace MyNet5ApiAdoTest.Utility
             }
         }
 
-        public static SqlDataReader GetSqlDataReader(string strSQL, Hashtable htParams)
+        public static SqlDataReader GetSqlDataReader(string strSQL, Hashtable htParams = null)
         {
             SqlConnection conn = new SqlConnection(connectionString);
             conn.Open();
@@ -38,7 +38,7 @@ namespace MyNet5ApiAdoTest.Utility
             return sqlCommand.ExecuteReader(CommandBehavior.CloseConnection);
         }
 
-        public static object ExecuteScalar(string strSQL, Hashtable htParams)
+        public static object ExecuteScalar(string strSQL, Hashtable htParams = null)
         {
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
@@ -53,10 +53,13 @@ namespace MyNet5ApiAdoTest.Utility
 
         private static void PrepareParams(Hashtable htParams, SqlCommand sqlCommand)
         {
-            foreach (DictionaryEntry entry in htParams)
+            if(htParams != null)
             {
-                sqlCommand.Parameters.AddWithValue(entry.Key.ToString(), entry.Value);
-            }
+                foreach (DictionaryEntry entry in htParams)
+                {
+                    sqlCommand.Parameters.AddWithValue(entry.Key.ToString(), entry.Value);
+                }
+            }            
         }
     }
 }
